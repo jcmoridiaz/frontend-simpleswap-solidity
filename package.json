@@ -1,0 +1,25 @@
+{
+  "name": "frontend-simpleswap-solidity",
+  "version": "1.0.0",
+  "description": "Application frontend of smartcontract simpleswap solidity",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.3.0",
+    "dotenv": "^17.2.0",
+    "ethers": "^6.15.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.0.0",
+    "hardhat": "^2.25.0"
+  },
+  "directories": {
+    "doc": "docs"
+  }
+}
