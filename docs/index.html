@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Simple Swap - ETHKipu</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@4.11.1/dist/web3.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/lib.commonjs/index.min.js"></script>
+    <script src="./contracts.js"></script>
+	<script src="./script.js" defer></script>
+</head>
+<body>
+
+  <button id="conect" onclick="connect()"><label id="account" style="cursor: pointer;">Conectar</label> </button><br>
+
+  <div id='swap-box'>
+    <div id="swap-menu">
+      <label class="token">TokenA</label> to<label class="token">TokenB</label>
+    </div>
+
+    <div id="swap-title-box">
+		  <p id="swap-title">Swap</p>
+		  <p id="swap-subtitle">Trade tokens in an instant</p>
+	  </div>
+
+    <div id="swap-form-box">
+      <div id='form' onSubmit='handleSubmit()'>
+
+        <label>
+          <img id="alineadoTextoImagenCentro" src='./TokenA.png' class="logo" /> <label class="token">Token A</label>
+          <div class="swap-balance pick-balance">Balance: <label class="balance" id="balanceTokenA">0</label></div>
+        </label>
+
+        <input onChange='setValueTokenToSpend()' type="text" class="IHAVE" placeholder="0.0"></input>
+
+       <br>
+
+        <label>
+		  <img id="alineadoTextoImagenCentro" src='./TokenB.png' class="logo" /> <label class="token">Token B</label>
+          <div class="swap-balance pick-balance">Balance: <label class="balance" id="balanceTokenB">0</label></div>
+        </label>
+
+        <input type="text" class="IWANT" placeholder="0.0"></input>
+
+        <div className="separador-vertical"></div>
+
+        <label id="swap-price-word">Price 
+          <div id="swap-price">
+            TOKEN_PRICE <label class="precio">0</label> TokenB
+          </div>
+        </label>
+
+        <button onclick="autorizeTokenA()" class="swap-submit">Authorize</button>
+		<button id="swap-submit" name="submit" class="swap-submit" onclick="handleSubmit()">Swap</button>
+        
+      </div>
+    </div>
+
+  </div>
+
+  <div id="toast"></div>
+
+  <div id="spinner" class="spinner-container">
+    <div class="spinner"></div>
+  </div>
+  
+</body>
+</html>
