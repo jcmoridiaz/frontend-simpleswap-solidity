@@ -1,4 +1,4 @@
-# SimpleSwap Smart Contract 🔄
+# Testing SimpleSwap Smart Contract 🔄
 
 ## Overview ℹ️
 This repository contains the `SimpleSwap` smart contract and test. The contract's functionalities are thoroughly validated through a comprehensive suite of Hardhat unit tests.
