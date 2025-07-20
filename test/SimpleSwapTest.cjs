@@ -48,8 +48,8 @@ describe("SimpleSwap", function () {
         it("Should revert if tokens are identical", async () => {
             const factory = await ethers.getContractFactory("SimpleSwap");
             const tokenAddress = await tokenA.getAddress(); // Use TokenA's address for both arguments
-            // Expect the deployment transaction to revert with a specific error message "IDENTICAL_ADDRESSES".
-            await expect(factory.deploy(tokenAddress, tokenAddress)).to.be.revertedWith("IDENTICAL_ADDRESSES");
+            // Expect the deployment transaction to revert with a specific error message "IDENTICAL_ADDR".
+            await expect(factory.deploy(tokenAddress, tokenAddress)).to.be.revertedWith("IDENTICAL_ADDR");
         });
     });
 
@@ -109,14 +109,14 @@ describe("SimpleSwap", function () {
         // The contract expects a specific canonical order (e.g., TokenA always before TokenB).
         it("Should revert if token pair invalid", async () => {
             // Attempt to add liquidity by passing TokenB's address first and TokenA's address second.
-            // Expect the transaction to revert with the error message "INVALID_TOKEN_PAIR".
+            // Expect the transaction to revert with the error message "IP".
             await expect(simpleSwap.addLiquidity(
                 await tokenB.getAddress(), // TokenB passed as token0
                 await tokenA.getAddress(), // TokenA passed as token1
                 100, 100, 100, 100,
                 owner.address,
                 DEADLINE()
-            )).to.be.revertedWith("INVALID_TOKEN_PAIR");
+            )).to.be.revertedWith("IP");
         });
 
         // Test case: Verifies that the addLiquidity function reverts if the recipient address
@@ -127,7 +127,7 @@ describe("SimpleSwap", function () {
             await tokenB.approve(simpleSwap, amount);
 
             // Attempt to add liquidity, specifying the zero address as the recipient.
-            // Expect the transaction to revert with the error message "INVALID_RECIPIENT".
+            // Expect the transaction to revert with the error message "ZT".
             await expect(simpleSwap.addLiquidity(
                 await tokenA.getAddress(),
                 await tokenB.getAddress(),
@@ -137,7 +137,7 @@ describe("SimpleSwap", function () {
                 0, // amountBMin (can be 0 for this test)
                 ethers.ZeroAddress, // Recipient is the zero address
                 DEADLINE()
-            )).to.be.revertedWith("INVALID_RECIPIENT");
+            )).to.be.revertedWith("ZT");
         });
 
         // Test case: Verifies that addLiquidity reverts if the actual amount of TokenB
@@ -176,7 +176,7 @@ describe("SimpleSwap", function () {
                 ethers.parseEther("2000"), // amountBMin: Set higher than the provided amountB, expecting revert.
                 owner.address,
                 DEADLINE()
-            )).to.be.revertedWith("INSUFFICIENT_B_AMOUNT");
+            )).to.be.revertedWith("LB");
         });
     });
 
@@ -230,21 +230,21 @@ describe("SimpleSwap", function () {
         // (e.g., tokens provided in the wrong order) is specified.
         it("Should revert with invalid token pair", async () => {
             // Attempt to remove liquidity by swapping the order of TokenA and TokenB addresses.
-            // Expect the transaction to revert with the error message "INVALID_TOKEN_PAIR".
+            // Expect the transaction to revert with the error message "IP".
             await expect(simpleSwap.removeLiquidity(
                 await tokenB.getAddress(), // TokenB passed as token0
                 await tokenA.getAddress(), // TokenA passed as token1
                 1000, 0, 0, // LP amount and min outputs (values don't matter for this revert)
                 owner.address,
                 DEADLINE()
-            )).to.be.revertedWith("INVALID_TOKEN_PAIR");
+            )).to.be.revertedWith("IP");
         });
 
         // Test case: Verifies that the removeLiquidity function reverts if the user attempts
         // to remove more liquidity (LP tokens) than they actually possess.
         it("Should revert with insufficient liquidity", async () => {
             // Attempt to remove a very large amount of LP tokens that the owner does not hold.
-            // Expect the transaction to revert with the error message "INSUFFICIENT_LIQUIDITY".
+            // Expect the transaction to revert with the error message "LB".
             await expect(simpleSwap.removeLiquidity(
                 await tokenA.getAddress(),
                 await tokenB.getAddress(),
@@ -252,7 +252,7 @@ describe("SimpleSwap", function () {
                 0, 0, // Min outputs
                 owner.address,
                 DEADLINE()
-            )).to.be.revertedWith("INSUFFICIENT_LIQUIDITY");
+            )).to.be.revertedWith("LB");
         });
 
         // Test case: Verifies that the removeLiquidity function reverts if the actual amounts
@@ -287,7 +287,7 @@ describe("SimpleSwap", function () {
                 0, // amountBMin
                 owner.address,
                 DEADLINE()
-            )).to.be.revertedWith("INSUFFICIENT_OUTPUT_AMOUNT");
+            )).to.be.revertedWith("SL");
         });
     });
 
@@ -338,14 +338,14 @@ describe("SimpleSwap", function () {
         it("Should revert with invalid path", async () => {
             const tokenAAddress = await tokenA.getAddress();
             // Attempt to call swapExactTokensForTokens with a path array containing only one token.
-            // Expect the transaction to revert with the error message "INVALID_PATH".
+            // Expect the transaction to revert with the error message "BP".
             await expect(simpleSwap.swapExactTokensForTokens(
                 100, // amountIn
                 0, // amountOutMin
                 [tokenAAddress], // Invalid path: only one token
                 owner.address,
                 DEADLINE()
-            )).to.be.revertedWith("INVALID_PATH");
+            )).to.be.revertedWith("BP");
         });
 
         // Test case: Verifies that the swapExactTokensForTokens function reverts if the actual
@@ -362,7 +362,7 @@ describe("SimpleSwap", function () {
                 [await tokenA.getAddress(), await tokenB.getAddress()],
                 owner.address,
                 DEADLINE()
-            )).to.be.revertedWith("INSUFFICIENT_OUTPUT_AMOUNT");
+            )).to.be.revertedWith("SL");
         });
     });
 
@@ -406,11 +406,11 @@ describe("SimpleSwap", function () {
             // Generate a random, non-existent Ethereum address to simulate an invalid token.
             const fake = ethers.Wallet.createRandom().address;
             // Attempt to call getPrice with a fake token address.
-            // Expect the transaction to revert with the error message "INVALID_TOKEN_PAIR".
+            // Expect the transaction to revert with the error message "INVALID_PAIR".
             await expect(simpleSwap.getPrice(
                 fake, // Invalid token address
                 await tokenB.getAddress()
-            )).to.be.revertedWith("INVALID_TOKEN_PAIR");
+            )).to.be.revertedWith("INVALID_PAIR");
         });
 
         // Test case: Verifies that the getAmountOut function correctly calculates the expected
